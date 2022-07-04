@@ -1,0 +1,48 @@
+name: Tag Release - Generate Changelog and Tag Release
+on:
+  workflow_dispatch:
+    branches: [ release* ]
+    inputs:
+      ref:
+        description: 'SHA of commit to promote'
+      tag:
+        description: 'Tag to be used for this promotion'
+
+
+# ------------------
+# Application Values
+# ------------------
+env:
+  SERVICE_NAME: bfi-task-allocation
+  SONAR_ORG: bfi-finance
+  SONAR_PROJECT_KEY: bfi-finance_bfi-task-allocation
+
+
+jobs:
+# -----------------------------------
+# Set git TAG and generate change log
+# -----------------------------------
+  tag_release_and_changelog:
+    name: Tag release and Generate Changelog
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup ref to use
+        run: |
+          echo "GIT_REF=$([ -z '${{ github.event.inputs.ref }}' ] && $(echo $GITHUB_SHA | cut -c 1-7) || echo '${{ github.event.inputs.ref }}' )" >> $GITHUB_ENV
+
+      - name: Checkout selected ref
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          ref: ${{ env.GIT_REF }}
+          token: ${{ secrets.GH_PAT }}
+
+      # With Prefix: npx standard-version --tag-prefix ${{ env.SIT_IMAGE_PREFIX }}
+      - name: Set & Tag Version with Changelog
+        run: |
+          git config user.name bfi-sreadmin-bot
+          git config user.email bfi.sreadmin@bfi.co.id
+          [ -z "${{ github.event.inputs.tag }}" ] && npx standard-version --commit-all || npx standard-version --commit-all --release-as ${{ github.event.inputs.tag }}
+          git push --follow-tags origin ${{ env.GIT_REF }}
+
+

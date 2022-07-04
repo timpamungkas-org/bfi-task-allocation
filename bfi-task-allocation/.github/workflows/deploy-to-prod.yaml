@@ -1,0 +1,62 @@
+name: PROD Release - Update Release Manifest Tag Version into Prod Environment
+on:
+  workflow_dispatch:
+    branches: [ release* ]
+    inputs:
+      tag:
+        description: 'Tag to be used for this promotion'
+        required: true
+
+
+# ------------------
+# Application Values
+# ------------------
+env:
+  SERVICE_NAME: bfi-task-allocation
+  SONAR_ORG: bfi-finance
+  SONAR_PROJECT_KEY: bfi-finance_bfi-task-allocation
+
+
+jobs:
+# --------------------------------------
+# Update deployment spec to use this tag
+# --------------------------------------
+  update-deployment-prod:
+    name: Deploy Image (PROD) - Helm Update (app-deployment)
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout selected ref
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Pull this build tag
+        run: |
+          echo "GIT_TAG=$([ -z '${{ github.event.inputs.tag }}' ] && git describe --tags --abbrev=0 || echo '${{ github.event.inputs.tag }}' )" >> $GITHUB_ENV
+      - uses: actions/checkout@v2
+        with:
+          repository: bfi-finance/bfi-app-deployment
+          token: ${{ secrets.GH_PAT }}
+          path: app-deployment
+          fetch-depth: 1
+
+      - uses: trstringer/manual-approval@v1
+        with:
+          secret: ${{ secrets.GH_PAT }}
+          approvers: <List of github usernames to approve>
+          minimum-approvals: 2
+       
+      - name: Update Image Version in the related HelmChart values.yaml
+        uses: fjogeleit/yaml-update-action@main
+        with:
+          valueFile: ${{ env.SERVICE_NAME }}/values-prod.yaml
+          propertyPath: "*.image.tag"
+          value: ${{ env.GIT_TAG }}
+          repository: bfi-finance/bfi-app-deployment
+          message: 'chore(deploy): [PROD] Update service (${{ env.SERVICE_NAME }}) image version to (${{ env.GIT_TAG }})'
+          createPR: false
+          branch: master
+          targetBranch: master
+          token: ${{ secrets.GH_PAT }}
+          workDir: bfi-app-deployment

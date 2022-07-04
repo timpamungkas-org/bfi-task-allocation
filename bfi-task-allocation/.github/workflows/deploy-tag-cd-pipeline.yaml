@@ -1,0 +1,118 @@
+name: Deploy Tag - CD Pipeline deploy tags to SIT & UAT environment
+on:
+  push:
+    branches:
+      - '!**'
+    tags:
+      - '**'
+
+
+# ------------------
+# Application Values
+# ------------------
+env:
+  SERVICE_NAME: bfi-task-allocation
+
+
+jobs:
+# ---------------------------------------
+# Build and tag image with Docker and GCP
+# ---------------------------------------
+  tag_and_push_image:
+    name: Build, Tag and Push Image - Docker
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout selected ref
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Pull this build tag
+        run: |
+          echo "GIT_TAG=$([ -z '${{ env.GITHUB_REF_NAME }}' ] && git describe --tags --abbrev=0 || echo '${{ env.GITHUB_REF_NAME }}' )" >> $GITHUB_ENV
+
+      - name: Use Java version
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          architecture: x64
+          distribution: 'corretto'
+
+      - name: Cache Maven packages
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.m2/repository
+          key: ${{ runner.os }}-maven
+          restore-keys: |
+            ${{ runner.os }}-maven
+
+      - name: Binding Environment (Image Variables)
+        run: |
+          echo "IMAGE_TAG=${{ secrets.IMAGE_NAME }}:${{ env.GIT_TAG }}" >> $GITHUB_ENV
+          echo "GAR_IMAGE_TAG=${{ secrets.BFI_GCP_DOCKER_REGION }}/${{ secrets.BFI_GCP_PROJECT }}/${{ secrets.GCP_DOCKER_REPO }}/${{ secrets.IMAGE_NAME }}:${{ env.GIT_TAG }}" >> $GITHUB_ENV
+
+      - name: Build Jar
+        run: make build
+
+      - name: Build Docker image
+        run: docker build --file Dockerfile -t ${{ env.IMAGE_TAG }} .
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v0
+        with:
+          project_id: ${{ secrets.BFI_GCP_PROJECT }}
+          service_account_key: ${{ secrets.BFI_GCP_SA_KEY }}
+          export_default_credentials: true
+
+      - name: Auth google to docker
+        run: gcloud auth configure-docker ${{ secrets.BFI_GCP_DOCKER_REGION }} -q
+
+      - name: Tag image (SHA)
+        run: docker image tag ${{ env.IMAGE_TAG }} ${{ env.GAR_IMAGE_TAG }}
+
+      - name: Push image to GAR (SHA)
+        run: docker push ${{ env.GAR_IMAGE_TAG }}
+
+
+# --------------------------------------
+# Update deployment spec to use this tag
+# --------------------------------------
+  update-deployment-sit:
+    needs: [tag_and_push_image]
+    name: Deploy Image (SIT) - Helm Update (app-deployment)
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout selected ref
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Pull this build tag
+        run: |
+          echo "GIT_TAG=$([ -z '${{ env.GITHUB_REF_NAME }}' ] && git describe --tags --abbrev=0 || echo '${{ env.GITHUB_REF_NAME }}' )" >> $GITHUB_ENV
+
+      - uses: actions/checkout@v2
+        with:
+          repository: bfi-finance/app-deployment
+          token: ${{ secrets.GH_PAT }}
+          path: app-deployment
+          fetch-depth: 1
+
+      - name: Update Image Version in the related HelmChart values.yaml
+        uses: fjogeleit/yaml-update-action@main
+        with:
+          valueFile: ${{ env.SERVICE_NAME }}/values-sit.yaml
+          propertyPath: "*.image.tag"
+          value: ${{ env.GIT_TAG }}
+          repository: bfi-finance/app-deployment
+          message: 'chore(deploy): [SIT] Update service (${{ env.SERVICE_NAME }}) image version to (${{ env.GIT_TAG }})'
+          createPR: false
+          branch: master
+          targetBranch: master
+          token: ${{ secrets.GH_PAT }}
+          workDir: app-deployment
+
+

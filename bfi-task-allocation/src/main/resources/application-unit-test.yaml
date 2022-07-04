@@ -1,0 +1,27 @@
+spring:
+  main:
+    banner-mode: OFF
+  datasource:
+    url: jdbc:h2:mem:testdb
+    password: password
+    username: sa
+
+logging:
+  level:
+    root: OFF
+    org:
+      springframework: OFF
+
+setting:
+  service:
+    internal:
+      name: 'Service bfi-task-allocation'
+      key: INTERNAL_KEY
+  jwt:
+    token:
+      issuer: MY_LOCAL_MACHINE
+    jks:
+      filePath: 'fake.jks'
+      filePassword: 'P@ssw0rd'
+      keyName: 'jwt_key'
+      keyPassword: 'P@ssw0rd'

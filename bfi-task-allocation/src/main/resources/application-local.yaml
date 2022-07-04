@@ -1,0 +1,37 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    password: password
+    username: sa
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: debug
+        type:
+          descriptor:
+            sql: trace
+      springframework:
+        web:
+          client:
+            RestTemplate: DEBUG
+
+management:
+  endpoint:
+    health:
+      show-details: always
+
+setting:
+  service:
+    internal:
+      name: 'Service bfi-task-allocation'
+      key: INTERNAL_KEY
+  jwt:
+    token:
+      issuer: MY_LOCAL_MACHINE
+    jks:
+      filePath: './add-your-jks-here.jks'
+      filePassword: 'P@ssw0rd'
+      keyName: 'jwt_key'
+      keyPassword: 'P@ssw0rd'
