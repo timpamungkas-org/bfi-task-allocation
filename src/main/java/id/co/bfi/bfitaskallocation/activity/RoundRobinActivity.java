@@ -7,8 +7,10 @@ import org.springframework.stereotype.Component;
 
 import id.co.bfi.bfitaskallocation.constant.ActivityConstants;
 import id.co.bfi.bfitaskallocation.service.UserCamundaService;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
+@Slf4j
 public class RoundRobinActivity implements JavaDelegate {
 
   @Autowired
@@ -17,7 +19,7 @@ public class RoundRobinActivity implements JavaDelegate {
   @Override
   public void execute(DelegateExecution execution) throws Exception {
     String groupName = (String) execution.getVariable(ActivityConstants.ROUNDROBIN_ASSIGN_TO_GROUP);
-    System.out.println("The group name is: " + groupName);
+    log.info("The group name is: " + groupName);
     String assignTo = userService.getUserByRoundRobin(execution, groupName);
     execution.setVariable(ActivityConstants.ROUNDROBIN_ASSIGN_TO_USER, assignTo);
   }

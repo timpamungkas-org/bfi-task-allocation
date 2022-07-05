@@ -6,7 +6,9 @@ import java.util.List;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 
 import id.co.bfi.bfitaskallocation.service.GroupCamundaService;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class GroupCamundaServiceImpl implements GroupCamundaService{
 
   @Override
@@ -23,13 +25,13 @@ public class GroupCamundaServiceImpl implements GroupCamundaService{
   @Override
   public List<String> getListMemberGroupByGroupName(DelegateExecution execution, String groupName) {
     List<String> listUserName = new ArrayList<>();
-    System.out.println("The group name is: " + groupName);
+    log.info("The group name is: " + groupName);
     var users = execution.getProcessEngineServices().getIdentityService().createUserQuery()
             .memberOfGroup(groupName).list();
 
     for (int i = 0; i < users.size(); i++) {
         String userName = users.get(i).getId();
-        System.out.println("The username name is: " + userName);
+        log.info("The username name is: " + userName);
         listUserName.add(userName);
     }
     return listUserName;

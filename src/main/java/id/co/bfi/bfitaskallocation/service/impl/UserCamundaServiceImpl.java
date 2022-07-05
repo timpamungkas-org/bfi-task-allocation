@@ -6,7 +6,9 @@ import java.util.List;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 
 import id.co.bfi.bfitaskallocation.service.UserCamundaService;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class UserCamundaServiceImpl implements UserCamundaService{
   private String assignTo;
   @Override
@@ -45,32 +47,30 @@ public class UserCamundaServiceImpl implements UserCamundaService{
     int listUserSize = participants.size();
 
     for (int itv = 0; itv < numInterval; itv++) {
-        System.out.println("INTERVAL : " + (itv + 1));
+        log.info("INTERVAL : " + (itv + 1));
+
         int userIdx = itv % listUserSize;
 
-        System.out.println("Compare: " + participants.get(userIdx) + " and " + listUserName.get(0));
+        log.info("Compare: " + participants.get(userIdx) + " and " + listUserName.get(0));
 
         var countTaskFirst = execution.getProcessEngineServices().getTaskService().createTaskQuery()
                 .taskAssignee(listUserName.get(0))
                 .list().size();
 
-        System.out.println(listUserName.get(0) + " HAVE " + countTaskFirst + " TASK ");
+        log.info(listUserName.get(0) + " HAVE " + countTaskFirst + " TASK ");
 
         var countTaskSecond = execution.getProcessEngineServices().getTaskService().createTaskQuery()
                 .taskAssignee(participants.get(userIdx))
                 .list().size();
 
-        System.out.println(participants.get(userIdx) + " HAVE " + countTaskSecond + " TASK ");
-
+        log.info(participants.get(userIdx) + " HAVE " + countTaskSecond + " TASK ");
 
         if (countTaskFirst < countTaskSecond) {
-            System.out.println("Assign: " + listUserName.get(0));
-            // execution.setVariable("assignToUser", listUserName.get(0));
+            log.info("Assign: " + listUserName.get(0));
             assignTo = listUserName.get(0);
         } else {
-            System.out.println("Assign: " + participants.get(userIdx));
+            log.info("Assign: " + participants.get(userIdx));
             assignTo = participants.get(userIdx);
-            // execution.setVariable("assignToUser", participants.get(userIdx));
         }
 
     }
