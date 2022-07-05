@@ -25,13 +25,13 @@ public class GroupCamundaServiceImpl implements GroupCamundaService{
   @Override
   public List<String> getListMemberGroupByGroupName(DelegateExecution execution, String groupName) {
     List<String> listUserName = new ArrayList<>();
-    log.info("The group name is: " + groupName);
+    log.debug("The group name is: " + groupName);
     var users = execution.getProcessEngineServices().getIdentityService().createUserQuery()
             .memberOfGroup(groupName).list();
 
     for (int i = 0; i < users.size(); i++) {
         String userName = users.get(i).getId();
-        log.info("The username name is: " + userName);
+        log.debug("The username name is: " + userName);
         listUserName.add(userName);
     }
     return listUserName;

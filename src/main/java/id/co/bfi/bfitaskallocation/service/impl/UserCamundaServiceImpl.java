@@ -49,29 +49,29 @@ public class UserCamundaServiceImpl implements UserCamundaService {
       int listUserSize = participants.size();
 
       for (int itv = 0; itv < numInterval; itv++) {
-        log.info("INTERVAL : " + (itv + 1));
+        log.debug("INTERVAL : " + (itv + 1));
 
         int userIdx = itv % listUserSize;
 
-        log.info("Compare: " + participants.get(userIdx) + " and " + listUserName.get(0));
+        log.debug("Compare: " + participants.get(userIdx) + " and " + listUserName.get(0));
 
         var countTaskFirst = execution.getProcessEngineServices().getTaskService().createTaskQuery()
             .taskAssignee(listUserName.get(0))
             .list().size();
 
-        log.info(listUserName.get(0) + " HAVE " + countTaskFirst + " TASK ");
+        log.debug(listUserName.get(0) + " HAVE " + countTaskFirst + " TASK ");
 
         var countTaskSecond = execution.getProcessEngineServices().getTaskService().createTaskQuery()
             .taskAssignee(participants.get(userIdx))
             .list().size();
 
-        log.info(participants.get(userIdx) + " HAVE " + countTaskSecond + " TASK ");
+        log.debug(participants.get(userIdx) + " HAVE " + countTaskSecond + " TASK ");
 
         if (countTaskFirst < countTaskSecond) {
-          log.info("Assign: " + listUserName.get(0));
+          log.debug("Assign: " + listUserName.get(0));
           assignTo = listUserName.get(0);
         } else {
-          log.info("Assign: " + participants.get(userIdx));
+          log.debug("Assign: " + participants.get(userIdx));
           assignTo = participants.get(userIdx);
         }
 

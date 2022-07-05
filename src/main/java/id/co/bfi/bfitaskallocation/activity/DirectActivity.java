@@ -22,7 +22,7 @@ public class DirectActivity implements JavaDelegate {
   @Override
   public void execute(DelegateExecution execution) throws Exception {
     String assignTo = (String) execution.getVariable(ActivityConstants.DIRECT_ASSIGN_TO);
-    log.info("assignTo is: " + assignTo);
+    log.debug("assignTo is: " + assignTo);
     var countUser = userService.countUserByGroupName(execution, assignTo);
     var countGroup = groupService.countGroupByUserName(execution, assignTo);
     execution.setVariable(ActivityConstants.DIRECT_COUNT_USER, countUser);

@@ -19,7 +19,7 @@ public class RoundRobinActivity implements JavaDelegate {
   @Override
   public void execute(DelegateExecution execution) throws Exception {
     String groupName = (String) execution.getVariable(ActivityConstants.ROUNDROBIN_ASSIGN_TO_GROUP);
-    log.info("The group name is: " + groupName);
+    log.debug("The group name is: " + groupName);
     String assignTo = userService.getUserByRoundRobin(execution, groupName);
     execution.setVariable(ActivityConstants.ROUNDROBIN_ASSIGN_TO_USER, assignTo);
   }
