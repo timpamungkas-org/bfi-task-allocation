@@ -9,7 +9,7 @@
     <version>2.7.1</version>
   </parent>
 
-  <groupId>id.bfi.co.id</groupId>
+  <groupId>id.co.bfi</groupId>
   <artifactId>bfi-task-allocation</artifactId>
   <version>0.1.0</version>
 
