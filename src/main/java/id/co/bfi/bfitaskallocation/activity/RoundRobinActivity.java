@@ -11,13 +11,13 @@ import id.co.bfi.bfitaskallocation.service.UserCamundaService;
 public class RoundRobinActivity implements JavaDelegate {
 
   @Autowired
-  private UserCamundaService _userService;
+  private UserCamundaService userService;
   
   @Override
   public void execute(DelegateExecution execution) throws Exception {
     String groupName = (String) execution.getVariable("assignToGroup");
     System.out.println("The group name is: " + groupName);
-    String assignTo = _userService.getUserByRoundRobin(execution, groupName);
+    String assignTo = userService.getUserByRoundRobin(execution, groupName);
     execution.setVariable("assignToUser", assignTo);
   }
   

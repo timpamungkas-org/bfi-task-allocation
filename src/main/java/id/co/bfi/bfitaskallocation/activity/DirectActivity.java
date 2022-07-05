@@ -12,18 +12,18 @@ import id.co.bfi.bfitaskallocation.service.UserCamundaService;
 public class DirectActivity implements JavaDelegate {
 
   @Autowired
-  private UserCamundaService _userService;
+  private UserCamundaService userService;
 
   @Autowired
-  private GroupCamundaService _groupService;
+  private GroupCamundaService groupService;
   @Override
   public void execute(DelegateExecution execution) throws Exception {
     String assignTo = (String) execution.getVariable("assignTo");
     System.out.println(" assignTo is: " + assignTo);
 
-    var countUser = _userService.countUserByGroupName(execution, assignTo);
+    var countUser = userService.countUserByGroupName(execution, assignTo);
 
-    var countGroup = _groupService.countGroupByUserName(execution, assignTo);
+    var countGroup = groupService.countGroupByUserName(execution, assignTo);
 
     execution.setVariable("countUser", countUser);
     execution.setVariable("countGroup", countGroup);

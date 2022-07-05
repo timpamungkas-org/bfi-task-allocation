@@ -12,14 +12,14 @@ import id.co.bfi.bfitaskallocation.service.GroupCamundaService;
 @Component
 public class PickupActivity implements JavaDelegate{
   @Autowired
-  private GroupCamundaService _groupService;
+  private GroupCamundaService groupService;
 
   @Override
   public void execute(DelegateExecution execution) throws Exception {
     String groupName = (String) execution.getVariable("assignToGroup");
 
     if (!isBlankString(groupName)) {
-        List<String> listUserName = _groupService.getListMemberGroupByGroupName(execution, groupName);
+        List<String> listUserName = groupService.getListMemberGroupByGroupName(execution, groupName);
         execution.setVariable("userGroup", listUserName);
     }
     
