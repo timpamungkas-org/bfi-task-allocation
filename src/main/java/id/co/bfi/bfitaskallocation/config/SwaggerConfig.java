@@ -20,7 +20,7 @@ public class SwaggerConfig {
       .components(new Components())
       .info(
         new Info()
-          .title("id.bfi.co.id")
+          .title("id.co.bfi.bfitaskallocation")
           .version(appVersion)
           .license(new License().name("Apache 2.0").url("http://springdoc.org"))
         );
