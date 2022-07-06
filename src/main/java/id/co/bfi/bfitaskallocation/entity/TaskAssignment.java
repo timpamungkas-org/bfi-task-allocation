@@ -25,33 +25,35 @@ public class TaskAssignment {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column
+  @Column(name="transactioncode")
   private String transactionCode;
 
-  @Column
+  @Column(name="modulename")
   private String moduleName;
 
-  @Column
+  @Column(name="taskname")
   private String taskName;
 
-  @Column
+  @Column(name="taskdescription")
   private String taskDescription;
 
-  @Column
+  @Column(name="linkurl")
   private String linkUrl;
 
-  @Column
+  @Column(name="assignmenttype")
   private String assignmentType;
 
-  @Column
+  @Column(name="assignto")
   private String assignTo;
 
-  @Column
+  @Column(name="taskstatus")
   private String taskStatus;
 
   @CreationTimestamp
+  @Column(name="created_at")
   private LocalDateTime createdAt;
 
   @UpdateTimestamp
+  @Column(name="updated_at")
   private LocalDateTime updatedAt;
 }

@@ -3,6 +3,7 @@ package id.co.bfi.bfitaskallocation.controller;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,12 +25,10 @@ public class TaskAssignmentController {
   private TaskAssignmentService taskAssignmentService;
 
 
-  @PostMapping("/taskAssignment")
-  @Operation(summary = "Create a new Task Assignment", operationId = "Hai")
-  public TaskAssignmentResponse createTaskAssignment(
-      @Valid @RequestBody CreateTaskAssignmentRequest CreateTaskAssignmentRequest
-    ) {
-    log.info("Invoking post on /dummy route");
+  @PostMapping(value = "/taskAssignment", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+  @Operation(summary = "Create a new Task Assignment", operationId = "createTaskAssignment")
+  public TaskAssignmentResponse createTaskAssignment(@Valid @RequestBody CreateTaskAssignmentRequest CreateTaskAssignmentRequest) {
+    log.debug("Invoking POST on /taskAssignment route");
     return taskAssignmentService.createTaskAssignment(CreateTaskAssignmentRequest);
   }
 
