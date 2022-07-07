@@ -1,7 +1,6 @@
 package id.co.bfi.bfitaskallocation.entity;
 
 import java.time.LocalDateTime;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -21,42 +20,32 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "taskassignment", schema = "public")
+@Table(name = "task_assignment", schema = "public")
 public class TaskAssignment {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(name="transactioncode")
   private String transactionCode;
 
-  @Column(name="modulename")
   private String moduleName;
 
-  @Column(name="taskname")
   private String taskName;
 
-  @Column(name="taskdescription")
   private String taskDescription;
 
-  @Column(name="linkurl")
   private String linkUrl;
 
-  @Column(name="assignmenttype")
   private String assignmentType;
 
-  @Column(name="assignto")
   private String assignTo;
 
-  @Column(name="taskstatus")
   private String taskStatus;
 
   @CreationTimestamp
-  @Column(name="created_at")
   private LocalDateTime createdAt;
 
   @UpdateTimestamp
-  @Column(name="updated_at")
   private LocalDateTime updatedAt;
 }

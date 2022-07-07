@@ -1,14 +1,14 @@
-create table taskAssignment
+create table task_assignment
 (
     id SERIAL PRIMARY KEY,
-    transactionCode varchar(10) not null,
-    moduleName varchar(50) not null,
-    taskName varchar(50) not null,
-    taskDescription varchar(50) not null,
-    linkUrl varchar(50) not null,
-    assignmentType varchar(10) not null,
-    assignTo varchar(20) not null,
-    taskStatus varchar(10) not null,
+    transaction_code varchar(10) not null,
+    module_name varchar(50) not null,
+    task_name varchar(50) not null,
+    task_description varchar(50) not null,
+    link_url varchar(50) not null,
+    assignment_type varchar(10) not null,
+    assign_to varchar(20) not null,
+    task_status varchar(10) not null,
     created_at timestamp not null,
     updated_at timestamp
 );
