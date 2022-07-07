@@ -6,6 +6,9 @@ import id.co.bfi.bfitaskallocation.entity.TaskAssignment;
 import id.co.bfi.bfitaskallocation.repository.TaskAssignmentRepository;
 import id.co.bfi.bfitaskallocation.service.TaskAssignmentService;
 import lombok.extern.slf4j.Slf4j;
+
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -51,6 +54,8 @@ public class TaskAssignmentServiceImpl implements TaskAssignmentService {
         .assignmentType(createTaskAssignment.getAssignmentType())
         .assignTo(createTaskAssignment.getAssignTo())
         .taskStatus(createTaskAssignment.getTaskStatus())
+        .linkUrl(createTaskAssignment.getLinkUrl())
+        .createdAt(LocalDateTime.now())
         .build());
 
     log.info("New task assignment record created !");
@@ -65,6 +70,7 @@ public class TaskAssignmentServiceImpl implements TaskAssignmentService {
         .assignTo(taskAssignment.getAssignTo())
         .taskStatus(taskAssignment.getTaskStatus())
         .createdAt(taskAssignment.getCreatedAt())
+        .linkUrl(taskAssignment.getLinkUrl())
         .updatedAt(taskAssignment.getUpdatedAt())
         .build();
   }
