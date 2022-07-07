@@ -10,4 +10,8 @@ public final class ApiGenericExceptionHandlerConstants {
   public static final String MESSAGE_SQL_EXCEPTION = "SQL exception from server";
   public static final String REASON_CANNOT_READ_REQUEST_BODY = "Cannot read request body. Check submmited data (e.g. format, content, ...)";
 
+  private ApiGenericExceptionHandlerConstants() {
+    super();
+  }
+
 }
