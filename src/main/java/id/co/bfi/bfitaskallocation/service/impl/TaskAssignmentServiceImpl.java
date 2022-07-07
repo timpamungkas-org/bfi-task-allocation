@@ -38,6 +38,7 @@ public class TaskAssignmentServiceImpl implements TaskAssignmentService {
         .taskDescription(taskAssignment.getTaskDescription())
         .assignmentType(taskAssignment.getAssignmentType())
         .assignTo(taskAssignment.getAssignTo())
+        .linkUrl(taskAssignment.getLinkUrl())
         .taskStatus(taskAssignment.getTaskStatus())
         .createdAt(taskAssignment.getCreatedAt())
         .updatedAt(taskAssignment.getUpdatedAt())
