@@ -26,19 +26,18 @@ public class TaskAssignmentController {
   private TaskAssignmentService taskAssignmentService;
 
 
-
-  @GetMapping(value = "/taskAssignment/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(value = "/task_assignment/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Get Task Assignment by Id", operationId = "getTaskById")
   public TaskAssignmentResponse getTaskById(@Valid @PathVariable @Schema(description = "Task Assignment Id", example = "9") Long id) {
     log.debug("Invoking GET on /taskAssignment/"+id+" route");
     return taskAssignmentService.getTaskAssignment(id);
   }
 
-  @PostMapping(value = "/taskAssignment", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value = "/task_assignment", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Create a new Task Assignment", operationId = "createTaskAssignment")
-  public TaskAssignmentResponse createTaskAssignment(@Valid @RequestBody CreateTaskAssignmentRequest CreateTaskAssignmentRequest) {
+  public TaskAssignmentResponse createTaskAssignment(@Valid @RequestBody CreateTaskAssignmentRequest createTaskAssignmentRequest) {
     log.debug("Invoking POST on /taskAssignment route");
-    return taskAssignmentService.createTaskAssignment(CreateTaskAssignmentRequest);
+    return taskAssignmentService.createTaskAssignment(createTaskAssignmentRequest);
   }
 
 
