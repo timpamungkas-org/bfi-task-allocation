@@ -1,6 +1,6 @@
 package id.co.bfi.bfitaskallocation.constant;
 
-public interface ApiGenericExceptionHandlerConstants {
+public final class ApiGenericExceptionHandlerConstants {
 
   String CODE_BAD_REQUEST = "bad_request";
   String CODE_SQL_EXCEPTION = "sql_exception";
